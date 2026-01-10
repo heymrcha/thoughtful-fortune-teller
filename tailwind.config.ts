@@ -57,6 +57,43 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        brass: {
+          DEFAULT: "hsl(var(--brass))",
+          light: "hsl(var(--brass-light))",
+          glow: "hsl(var(--brass-glow))",
+        },
+        indigo: {
+          deep: "hsl(var(--indigo-deep))",
+          light: "hsl(var(--indigo-light))",
+        },
+        cream: {
+          DEFAULT: "hsl(var(--cream))",
+          dark: "hsl(var(--cream-dark))",
+        },
+        sage: {
+          DEFAULT: "hsl(var(--sage))",
+          light: "hsl(var(--sage-light))",
+        },
+        ink: {
+          DEFAULT: "hsl(var(--ink))",
+          light: "hsl(var(--ink-light))",
+        },
+      },
+      backgroundImage: {
+        'gradient-premium': 'var(--gradient-premium)',
+        'gradient-brass': 'var(--gradient-brass)',
+        'gradient-cream': 'var(--gradient-cream)',
+        'gradient-card': 'var(--gradient-card)',
+      },
+      boxShadow: {
+        'soft': 'var(--shadow-soft)',
+        'card': 'var(--shadow-card)',
+        'elevated': 'var(--shadow-elevated)',
+        'brass': 'var(--shadow-brass)',
+      },
+      fontFamily: {
+        serif: ['Noto Serif KR', 'Georgia', 'serif'],
+        sans: ['Pretendard', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
