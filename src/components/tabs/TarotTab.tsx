@@ -1,15 +1,19 @@
 import { motion } from "framer-motion";
 import { Sparkles, Heart, Activity, BookOpen, Layers } from "lucide-react";
 
+interface TarotTabProps {
+  onNavigate: (destination: string) => void;
+}
+
 const tarotItems = [
-  { id: "today", title: "오늘의 타로", desc: "하루의 메시지를 받아보세요", icon: Sparkles },
-  { id: "love", title: "연애운 타로", desc: "사랑의 흐름을 확인하세요", icon: Heart },
-  { id: "health", title: "건강운 타로", desc: "건강의 방향을 살펴보세요", icon: Activity },
-  { id: "study", title: "학업운 타로", desc: "학업의 기운을 점쳐보세요", icon: BookOpen },
-  { id: "iking", title: "주역 타로", desc: "동양 고전의 지혜", icon: Layers },
+  { id: "tarot-today", title: "오늘의 타로", desc: "하루의 메시지를 받아보세요", icon: Sparkles },
+  { id: "tarot-love", title: "연애운 타로", desc: "사랑의 흐름을 확인하세요", icon: Heart },
+  { id: "tarot-health", title: "건강운 타로", desc: "건강의 방향을 살펴보세요", icon: Activity },
+  { id: "tarot-study", title: "학업운 타로", desc: "학업의 기운을 점쳐보세요", icon: BookOpen },
+  { id: "tarot-iking", title: "주역 타로", desc: "동양 고전의 지혜", icon: Layers },
 ];
 
-const TarotTab = () => {
+const TarotTab = ({ onNavigate }: TarotTabProps) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -38,6 +42,7 @@ const TarotTab = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 * index }}
               whileTap={{ scale: 0.98 }}
+              onClick={() => onNavigate(item.id)}
               className="w-full flex items-center gap-4 p-5 bg-card rounded-2xl shadow-card text-left group hover:shadow-elevated transition-shadow"
             >
               <div className="w-14 h-14 rounded-xl bg-gradient-brass flex items-center justify-center">
@@ -61,6 +66,7 @@ const TarotTab = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
             whileTap={{ scale: 0.98 }}
+            onClick={() => onNavigate("name-match")}
             className="bg-card rounded-2xl p-5 shadow-card text-center"
           >
             <div className="text-3xl mb-2">💑</div>
@@ -72,6 +78,7 @@ const TarotTab = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
             whileTap={{ scale: 0.98 }}
+            onClick={() => onNavigate("pet-name")}
             className="bg-card rounded-2xl p-5 shadow-card text-center"
           >
             <div className="text-3xl mb-2">🐾</div>

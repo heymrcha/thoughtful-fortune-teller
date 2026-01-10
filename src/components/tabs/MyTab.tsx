@@ -1,6 +1,10 @@
 import { motion } from "framer-motion";
 import { User, Users, CreditCard, Bell, Settings, ChevronRight, Calendar } from "lucide-react";
 
+interface MyTabProps {
+  onNavigate: (destination: string) => void;
+}
+
 const menuItems = [
   { id: "birth", title: "생년월일시 관리", desc: "나의 정보 수정", icon: Calendar },
   { id: "relations", title: "관계 프로필 관리", desc: "가족, 친구 정보", icon: Users },
@@ -9,7 +13,7 @@ const menuItems = [
   { id: "settings", title: "설정", desc: "앱 설정", icon: Settings },
 ];
 
-const MyTab = () => {
+const MyTab = ({ onNavigate }: MyTabProps) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -79,6 +83,7 @@ const MyTab = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 * index + 0.3 }}
               whileTap={{ scale: 0.98 }}
+              onClick={() => onNavigate(item.id)}
               className="w-full flex items-center gap-4 p-4 bg-card rounded-xl shadow-soft text-left group hover:shadow-card transition-shadow"
             >
               <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">

@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Compass,
   Users,
@@ -17,7 +16,7 @@ import ServiceCard from "@/components/home/ServiceCard";
 import SectionHeader from "@/components/home/SectionHeader";
 
 interface HomeTabProps {
-  onNavigate: (tab: string) => void;
+  onNavigate: (destination: string) => void;
 }
 
 const HomeTab = ({ onNavigate }: HomeTabProps) => {
@@ -62,7 +61,7 @@ const HomeTab = ({ onNavigate }: HomeTabProps) => {
               icon={Star}
               gradient="bg-primary text-primary-foreground"
               delay={0.2}
-              onClick={() => onNavigate("today")}
+              onClick={() => onNavigate("daily-detail")}
             />
             <CoreServiceCard
               title="자녀분석"
@@ -70,6 +69,7 @@ const HomeTab = ({ onNavigate }: HomeTabProps) => {
               icon={Baby}
               gradient="bg-secondary text-secondary-foreground"
               delay={0.3}
+              onClick={() => onNavigate("child")}
             />
           </div>
         </div>
@@ -84,12 +84,14 @@ const HomeTab = ({ onNavigate }: HomeTabProps) => {
             description="두 사람의 인연과 관계 해석"
             icon={Heart}
             delay={0.1}
+            onClick={() => onNavigate("compatibility")}
           />
           <ServiceCard
             title="대운분석"
             description="10년 단위 삶의 큰 흐름"
             icon={TrendingUp}
             delay={0.15}
+            onClick={() => onNavigate("daeun")}
           />
         </div>
       </section>
@@ -103,12 +105,14 @@ const HomeTab = ({ onNavigate }: HomeTabProps) => {
             description="올해의 전체 운세와 월별 해석"
             icon={Calendar}
             delay={0.1}
+            onClick={() => onNavigate("yearly")}
           />
           <ServiceCard
             title="토정비결"
             description="전통 방식의 한 해 운세"
             icon={BookOpen}
             delay={0.15}
+            onClick={() => onNavigate("tojeong")}
           />
         </div>
       </section>
@@ -122,18 +126,21 @@ const HomeTab = ({ onNavigate }: HomeTabProps) => {
             description="선천운과 후천운의 괘 해석"
             icon={FileText}
             delay={0.1}
+            onClick={() => onNavigate("harak")}
           />
           <ServiceCard
             title="석중결"
             description="상황별 심화 운세 해석"
             icon={FileText}
             delay={0.15}
+            onClick={() => onNavigate("seokjung")}
           />
           <ServiceCard
             title="택일"
             description="좋은 날을 선택하는 지혜"
             icon={CalendarCheck}
             delay={0.2}
+            onClick={() => onNavigate("datesel")}
           />
         </div>
       </section>
@@ -146,6 +153,7 @@ const HomeTab = ({ onNavigate }: HomeTabProps) => {
           description="좋아하는 연예인과의 궁합은?"
           icon={Users}
           delay={0.1}
+          onClick={() => onNavigate("celeb")}
         />
       </section>
     </motion.div>

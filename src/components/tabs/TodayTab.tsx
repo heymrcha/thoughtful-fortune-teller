@@ -3,7 +3,11 @@ import { ChevronRight, Sun, Moon, Sparkles } from "lucide-react";
 import TodayCard from "@/components/today/TodayCard";
 import FortuneScore from "@/components/today/FortuneScore";
 
-const TodayTab = () => {
+interface TodayTabProps {
+  onNavigate: (destination: string) => void;
+}
+
+const TodayTab = ({ onNavigate }: TodayTabProps) => {
   const today = new Date();
   const formattedDate = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
   const dayNames = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
@@ -75,6 +79,7 @@ const TodayTab = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
         whileTap={{ scale: 0.98 }}
+        onClick={() => onNavigate("daily-detail")}
         className="w-full flex items-center justify-between p-5 bg-card rounded-2xl shadow-card group"
       >
         <div className="flex items-center gap-3">

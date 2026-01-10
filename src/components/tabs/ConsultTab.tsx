@@ -1,7 +1,23 @@
 import { motion } from "framer-motion";
 import { MessageCircle, Phone, Video, Star } from "lucide-react";
+import { toast } from "sonner";
 
-const counselors = [
+interface Counselor {
+  id: number;
+  name: string;
+  specialty: string;
+  rating: number;
+  reviews: number;
+  available: boolean;
+  image: string;
+}
+
+interface ConsultTabProps {
+  onNavigate: (destination: string) => void;
+  onCounselorSelect: (counselor: Counselor) => void;
+}
+
+const counselors: Counselor[] = [
   {
     id: 1,
     name: "혜안 선생",
@@ -31,7 +47,11 @@ const counselors = [
   },
 ];
 
-const ConsultTab = () => {
+const ConsultTab = ({ onNavigate, onCounselorSelect }: ConsultTabProps) => {
+  const handleConsultTypeClick = (type: string) => {
+    toast.info(`${type} 상담을 이용하시려면 상담 선생님을 먼저 선택해 주세요.`);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -55,7 +75,8 @@ const ConsultTab = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-card rounded-2xl p-4 shadow-card text-center"
+          onClick={() => handleConsultTypeClick("채팅")}
+          className="bg-card rounded-2xl p-4 shadow-card text-center hover:shadow-elevated transition-shadow"
         >
           <div className="w-12 h-12 rounded-xl bg-muted mx-auto mb-2 flex items-center justify-center">
             <MessageCircle className="w-5 h-5 text-secondary" />
@@ -66,7 +87,8 @@ const ConsultTab = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="bg-card rounded-2xl p-4 shadow-card text-center"
+          onClick={() => handleConsultTypeClick("전화")}
+          className="bg-card rounded-2xl p-4 shadow-card text-center hover:shadow-elevated transition-shadow"
         >
           <div className="w-12 h-12 rounded-xl bg-muted mx-auto mb-2 flex items-center justify-center">
             <Phone className="w-5 h-5 text-secondary" />
@@ -77,7 +99,8 @@ const ConsultTab = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-card rounded-2xl p-4 shadow-card text-center"
+          onClick={() => handleConsultTypeClick("영상")}
+          className="bg-card rounded-2xl p-4 shadow-card text-center hover:shadow-elevated transition-shadow"
         >
           <div className="w-12 h-12 rounded-xl bg-muted mx-auto mb-2 flex items-center justify-center">
             <Video className="w-5 h-5 text-secondary" />
@@ -97,7 +120,8 @@ const ConsultTab = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 * index + 0.3 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center gap-4 p-4 bg-card rounded-2xl shadow-card text-left"
+              onClick={() => onCounselorSelect(counselor)}
+              className="w-full flex items-center gap-4 p-4 bg-card rounded-2xl shadow-card text-left hover:shadow-elevated transition-shadow"
             >
               <img
                 src={counselor.image}
