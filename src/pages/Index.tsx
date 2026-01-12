@@ -18,6 +18,7 @@ import Harak from "@/components/features/Harak";
 import Seokjung from "@/components/features/Seokjung";
 import DateSelection from "@/components/features/DateSelection";
 import CelebrityMatch from "@/components/features/CelebrityMatch";
+import FaceReading from "@/components/features/FaceReading";
 
 // Today Features
 import DailyFortuneDetail from "@/components/features/DailyFortuneDetail";
@@ -49,6 +50,7 @@ type SubPage =
   | "seokjung" 
   | "datesel" 
   | "celeb"
+  | "face-reading"
   | "daily-detail"
   | "tarot-today"
   | "tarot-love"
@@ -136,6 +138,8 @@ const Index = () => {
         return <DateSelection onBack={handleBack} />;
       case "celeb":
         return <CelebrityMatch onBack={handleBack} />;
+      case "face-reading":
+        return <FaceReading onBack={handleBack} />;
       case "daily-detail":
         return <DailyFortuneDetail onBack={handleBack} />;
       case "tarot-today":

@@ -9,6 +9,7 @@ import {
   BookOpen,
   FileText,
   Star,
+  ScanFace,
 } from "lucide-react";
 import CoreServiceCard from "@/components/home/CoreServiceCard";
 import ServiceCard from "@/components/home/ServiceCard";
@@ -71,6 +72,20 @@ const HomeTab = ({ onNavigate }: HomeTabProps) => {
               onClick={() => onNavigate("child")}
             />
           </div>
+        </div>
+      </section>
+
+      {/* AI Features */}
+      <section>
+        <SectionHeader title="AI 서비스" subtitle="인공지능 기반 분석" />
+        <div className="space-y-3">
+          <ServiceCard
+            title="AI 관상"
+            description="얼굴 사진으로 보는 관상 분석"
+            icon={ScanFace}
+            delay={0.1}
+            onClick={() => onNavigate("face-reading")}
+          />
         </div>
       </section>
 
