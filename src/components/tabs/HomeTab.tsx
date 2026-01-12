@@ -8,7 +8,6 @@ import {
   Calendar,
   BookOpen,
   FileText,
-  CalendarCheck,
   Star,
 } from "lucide-react";
 import CoreServiceCard from "@/components/home/CoreServiceCard";
@@ -35,7 +34,7 @@ const HomeTab = ({ onNavigate }: HomeTabProps) => {
         className="text-center pt-4"
       >
         <h1 className="text-2xl font-serif font-bold text-foreground mb-2">
-          명리의 지혜
+          더포춘
         </h1>
         <p className="text-muted-foreground">
           당신의 삶에 깊이 있는 통찰을 더합니다
@@ -122,25 +121,11 @@ const HomeTab = ({ onNavigate }: HomeTabProps) => {
         <SectionHeader title="고전·심화" subtitle="더 깊은 통찰" />
         <div className="space-y-3">
           <ServiceCard
-            title="하락이수"
-            description="선천운과 후천운의 괘 해석"
-            icon={FileText}
-            delay={0.1}
-            onClick={() => onNavigate("harak")}
-          />
-          <ServiceCard
             title="석중결"
             description="상황별 심화 운세 해석"
             icon={FileText}
-            delay={0.15}
+            delay={0.1}
             onClick={() => onNavigate("seokjung")}
-          />
-          <ServiceCard
-            title="택일"
-            description="좋은 날을 선택하는 지혜"
-            icon={CalendarCheck}
-            delay={0.2}
-            onClick={() => onNavigate("datesel")}
           />
         </div>
       </section>

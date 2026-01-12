@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import SajuChart from "@/components/saju/SajuChart";
 import OhangChart from "@/components/saju/OhangChart";
+import OhangPentagon from "@/components/saju/OhangPentagon";
 import InterpretationSection from "@/components/saju/InterpretationSection";
 import LuckyElement from "@/components/saju/LuckyElement";
 
@@ -64,7 +65,10 @@ const SajuResult = ({ onBack }: SajuResultProps) => {
       {/* Saju Chart */}
       <SajuChart pillars={pillars} />
 
-      {/* Ohang Analysis */}
+      {/* Ohang Pentagon Chart - 오각형 */}
+      <OhangPentagon data={ohangData} />
+
+      {/* Ohang Bar Analysis - 막대 */}
       <OhangChart data={ohangData} />
 
       {/* Il-gan Symbol */}
