@@ -197,6 +197,26 @@ const DailyFortuneDetail = ({ onBack }: DailyFortuneDetailProps) => {
             <div className="text-xs text-muted-foreground">행운의 방향</div>
             <div className="text-sm font-medium text-foreground mt-1">동쪽</div>
           </div>
+          <div className="bg-muted rounded-xl p-4 text-center">
+            <div className="text-2xl mb-1">🎵</div>
+            <div className="text-xs text-muted-foreground">오늘의 음악</div>
+            <div className="text-sm font-medium text-foreground mt-1">잔잔한 재즈</div>
+          </div>
+          <div className="bg-muted rounded-xl p-4 text-center">
+            <div className="text-2xl mb-1">🍵</div>
+            <div className="text-xs text-muted-foreground">오늘의 음료</div>
+            <div className="text-sm font-medium text-foreground mt-1">캐모마일 차</div>
+          </div>
+          <div className="bg-muted rounded-xl p-4 text-center">
+            <div className="text-2xl mb-1">🔢</div>
+            <div className="text-xs text-muted-foreground">행운의 숫자</div>
+            <div className="text-sm font-medium text-foreground mt-1">3, 7, 12</div>
+          </div>
+          <div className="bg-muted rounded-xl p-4 text-center">
+            <div className="text-2xl mb-1">💎</div>
+            <div className="text-xs text-muted-foreground">행운의 아이템</div>
+            <div className="text-sm font-medium text-foreground mt-1">자수정</div>
+          </div>
         </div>
       </motion.div>
     </motion.div>
