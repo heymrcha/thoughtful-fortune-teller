@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import SajuChart from "@/components/saju/SajuChart";
@@ -35,12 +36,12 @@ const SajuResult = ({ onBack }: SajuResultProps) => {
     >
       {/* Header */}
       <div className="flex items-center gap-3 pt-4">
-        <button
+        <Button variant="ghost" size="icon" aria-label="뒤로가기"
           onClick={onBack}
           className="w-10 h-10 rounded-xl bg-card flex items-center justify-center shadow-soft"
         >
           <ArrowLeft className="w-5 h-5 text-foreground" />
-        </button>
+        </Button>
         <div>
           <h1 className="text-xl font-serif font-bold text-foreground">사주명리</h1>
           <p className="text-sm text-muted-foreground">나의 본질과 삶의 흐름</p>

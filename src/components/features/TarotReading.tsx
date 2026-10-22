@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import SubPageHeader from "@/components/common/SubPageHeader";
 import { Button } from "@/components/ui/button";
@@ -23,9 +23,20 @@ const TarotReading = ({ type, title, onBack }: TarotReadingProps) => {
 
   const cards = Object.keys(cardMeanings);
 
+  useEffect(() => {
+    if (!selectedCard || step !== "select") return;
+    const timeout = window.setTimeout(() => setStep("result"), 500);
+    return () => window.clearTimeout(timeout);
+  }, [selectedCard, step]);
+
+  const resetReading = () => {
+    setSelectedCard(null);
+    setStep("select");
+  };
+
   const handleCardSelect = (card: string) => {
+    if (selectedCard) return;
     setSelectedCard(card);
-    setTimeout(() => setStep("result"), 500);
   };
 
   if (step === "select") {
@@ -50,17 +61,15 @@ const TarotReading = ({ type, title, onBack }: TarotReadingProps) => {
 
         <div className="grid grid-cols-5 gap-2">
           {cards.map((card, index) => (
-            <motion.button
+            <Button
               key={card}
-              initial={{ opacity: 0, rotateY: 180 }}
-              animate={{ opacity: 1, rotateY: 0 }}
-              transition={{ delay: index * 0.1 }}
-              whileTap={{ scale: 0.95 }}
+              aria-label={`${index + 1}번째 카드 선택`}
+              disabled={selectedCard !== null}
               onClick={() => handleCardSelect(card)}
-              className="aspect-[2/3] bg-gradient-brass rounded-lg shadow-elevated flex items-center justify-center"
+              className="h-auto p-0 aspect-[2/3] bg-gradient-brass rounded-lg shadow-elevated flex items-center justify-center"
             >
               <span className="text-2xl">🃏</span>
-            </motion.button>
+            </Button>
           ))}
         </div>
       </motion.div>
@@ -76,7 +85,7 @@ const TarotReading = ({ type, title, onBack }: TarotReadingProps) => {
       exit={{ opacity: 0 }}
       className="space-y-6"
     >
-      <SubPageHeader title={title} subtitle="카드 해석" onBack={() => setStep("select")} />
+      <SubPageHeader title={title} subtitle="카드 해석" onBack={resetReading} />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.8, rotateY: 180 }}
@@ -104,7 +113,7 @@ const TarotReading = ({ type, title, onBack }: TarotReadingProps) => {
       </motion.div>
 
       <div className="pb-8">
-        <Button onClick={() => setStep("select")} variant="outline" className="w-full h-14 rounded-xl">
+        <Button onClick={resetReading} variant="outline" className="w-full h-14 rounded-xl">
           다시 뽑기
         </Button>
       </div>

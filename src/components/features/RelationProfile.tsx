@@ -32,14 +32,14 @@ const RelationProfile = ({ onBack }: RelationProfileProps) => {
               <h4 className="font-medium text-foreground">{profile.name}</h4>
               <p className="text-sm text-muted-foreground">{profile.relation} · {profile.birth}</p>
             </div>
-            <button className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
+            <Button disabled variant="ghost" size="icon" aria-label={`${profile.name} 삭제 (준비 중)`} className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
               <Trash2 className="w-4 h-4 text-muted-foreground" />
-            </button>
+            </Button>
           </motion.div>
         ))}
       </div>
       
-      <Button variant="outline" className="w-full h-14 rounded-xl gap-2">
+      <Button disabled variant="outline" className="w-full h-14 rounded-xl gap-2">
         <Plus className="w-5 h-5" /> 새 프로필 추가
       </Button>
     </motion.div>

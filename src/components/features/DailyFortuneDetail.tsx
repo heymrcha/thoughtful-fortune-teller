@@ -1,3 +1,4 @@
+import EmotionalRecommendations from "@/components/today/EmotionalRecommendations";
 import { motion } from "framer-motion";
 import { Sun, Zap, AlertTriangle, TrendingUp, Heart, DollarSign, Activity } from "lucide-react";
 import SubPageHeader from "@/components/common/SubPageHeader";
@@ -173,51 +174,7 @@ const DailyFortuneDetail = ({ onBack }: DailyFortuneDetailProps) => {
         className="bg-card rounded-2xl p-5 shadow-card pb-8"
       >
         <h3 className="font-serif font-semibold text-foreground mb-4">오늘의 감성 추천</h3>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-muted rounded-xl p-4 text-center">
-            <div className="text-2xl mb-1">📚</div>
-            <div className="text-xs text-muted-foreground">오늘의 책</div>
-            <div className="text-sm font-medium text-foreground mt-1">멈추면 비로소 보이는 것들</div>
-          </div>
-          <div className="bg-muted rounded-xl p-4 text-center">
-            <div className="text-2xl mb-1">🎬</div>
-            <div className="text-xs text-muted-foreground">오늘의 영화</div>
-            <div className="text-sm font-medium text-foreground mt-1">어바웃 타임</div>
-          </div>
-          <div className="bg-muted rounded-xl p-4 text-center">
-            <div 
-              className="w-8 h-8 rounded-full mx-auto mb-1"
-              style={{ backgroundColor: "#4A7C59" }}
-            />
-            <div className="text-xs text-muted-foreground">행운의 색</div>
-            <div className="text-sm font-medium text-foreground mt-1">세이지 그린</div>
-          </div>
-          <div className="bg-muted rounded-xl p-4 text-center">
-            <div className="text-2xl mb-1">🧭</div>
-            <div className="text-xs text-muted-foreground">행운의 방향</div>
-            <div className="text-sm font-medium text-foreground mt-1">동쪽</div>
-          </div>
-          <div className="bg-muted rounded-xl p-4 text-center">
-            <div className="text-2xl mb-1">🎵</div>
-            <div className="text-xs text-muted-foreground">오늘의 음악</div>
-            <div className="text-sm font-medium text-foreground mt-1">잔잔한 재즈</div>
-          </div>
-          <div className="bg-muted rounded-xl p-4 text-center">
-            <div className="text-2xl mb-1">🍵</div>
-            <div className="text-xs text-muted-foreground">오늘의 음료</div>
-            <div className="text-sm font-medium text-foreground mt-1">캐모마일 차</div>
-          </div>
-          <div className="bg-muted rounded-xl p-4 text-center">
-            <div className="text-2xl mb-1">🔢</div>
-            <div className="text-xs text-muted-foreground">행운의 숫자</div>
-            <div className="text-sm font-medium text-foreground mt-1">3, 7, 12</div>
-          </div>
-          <div className="bg-muted rounded-xl p-4 text-center">
-            <div className="text-2xl mb-1">💎</div>
-            <div className="text-xs text-muted-foreground">행운의 아이템</div>
-            <div className="text-sm font-medium text-foreground mt-1">자수정</div>
-          </div>
-        </div>
+        <EmotionalRecommendations />
       </motion.div>
     </motion.div>
   );

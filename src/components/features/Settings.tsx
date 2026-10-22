@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Moon, Sun, Globe, HelpCircle, FileText, LogOut, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import SubPageHeader from "@/components/common/SubPageHeader";
 
 interface SettingsProps {
@@ -21,8 +22,8 @@ const Settings = ({ onBack }: SettingsProps) => {
       
       <div className="space-y-2">
         {settingsItems.map((item, index) => (
-          <motion.button key={item.label} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.05 }}
-            className="w-full bg-card rounded-xl p-4 shadow-soft flex items-center gap-4 text-left">
+          <Button disabled variant="ghost" key={item.label}
+            className="w-full h-auto whitespace-normal bg-card rounded-xl p-4 shadow-soft flex items-center gap-4 text-left">
             <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
               <item.icon className="w-5 h-5 text-secondary" />
             </div>
@@ -31,17 +32,17 @@ const Settings = ({ onBack }: SettingsProps) => {
               <p className="text-sm text-muted-foreground">{item.desc}</p>
             </div>
             <ChevronRight className="w-5 h-5 text-muted-foreground" />
-          </motion.button>
+          </Button>
         ))}
       </div>
       
-      <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
-        className="w-full bg-destructive/10 rounded-xl p-4 flex items-center gap-4 text-left">
+      <Button disabled variant="ghost"
+        className="w-full h-auto bg-destructive/10 rounded-xl p-4 flex items-center gap-4 text-left">
         <div className="w-10 h-10 rounded-xl bg-destructive/20 flex items-center justify-center">
           <LogOut className="w-5 h-5 text-destructive" />
         </div>
         <span className="font-medium text-destructive">로그아웃</span>
-      </motion.button>
+      </Button>
       
       <p className="text-center text-xs text-muted-foreground pb-8">버전 1.0.0</p>
     </motion.div>

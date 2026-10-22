@@ -26,7 +26,7 @@ const NotificationSettings = ({ onBack }: NotificationSettingsProps) => {
               <h4 className="font-medium text-foreground">{item.label}</h4>
               <p className="text-sm text-muted-foreground">{item.desc}</p>
             </div>
-            <Switch defaultChecked={item.enabled} />
+            <Switch aria-label={item.label} disabled checked={item.enabled} />
           </motion.div>
         ))}
       </div>
