@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { ArrowLeft, Star, MessageCircle, Phone, Video, Clock, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,9 +20,9 @@ const CounselorDetail = ({ counselor, onBack }: CounselorDetailProps) => {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
       <div className="flex items-center gap-3 pt-4">
-        <button onClick={onBack} className="w-10 h-10 rounded-xl bg-card flex items-center justify-center shadow-soft">
+        <Button variant="ghost" size="icon" aria-label="뒤로가기" onClick={onBack} className="w-10 h-10 rounded-xl bg-card flex items-center justify-center shadow-soft">
           <ArrowLeft className="w-5 h-5 text-foreground" />
-        </button>
+        </Button>
         <h1 className="text-xl font-serif font-bold text-foreground">상담사 프로필</h1>
       </div>
 
@@ -68,13 +69,13 @@ const CounselorDetail = ({ counselor, onBack }: CounselorDetailProps) => {
 
       <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="space-y-3 pb-8">
         <h3 className="font-serif font-semibold text-foreground">상담 방식 선택</h3>
-        <Button className="w-full h-14 justify-start gap-3 rounded-xl" variant="outline">
+        <Button disabled={!counselor.available} onClick={() => toast.info("프로토타입입니다. 실제 상담 예약이나 결제는 진행되지 않습니다.")} className="w-full h-14 justify-start gap-3 rounded-xl" variant="outline">
           <MessageCircle className="w-5 h-5" /> 채팅 상담 <span className="ml-auto text-secondary">10,000원/15분</span>
         </Button>
-        <Button className="w-full h-14 justify-start gap-3 rounded-xl" variant="outline">
+        <Button disabled={!counselor.available} onClick={() => toast.info("프로토타입입니다. 실제 상담 예약이나 결제는 진행되지 않습니다.")} className="w-full h-14 justify-start gap-3 rounded-xl" variant="outline">
           <Phone className="w-5 h-5" /> 전화 상담 <span className="ml-auto text-secondary">20,000원/15분</span>
         </Button>
-        <Button className="w-full h-14 justify-start gap-3 rounded-xl" variant="outline">
+        <Button disabled={!counselor.available} onClick={() => toast.info("프로토타입입니다. 실제 상담 예약이나 결제는 진행되지 않습니다.")} className="w-full h-14 justify-start gap-3 rounded-xl" variant="outline">
           <Video className="w-5 h-5" /> 영상 상담 <span className="ml-auto text-secondary">30,000원/15분</span>
         </Button>
       </motion.div>

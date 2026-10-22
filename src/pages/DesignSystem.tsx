@@ -6,17 +6,24 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Copy, Check } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 const DesignSystem = () => {
   const [copiedColor, setCopiedColor] = useState<string | null>(null);
 
-  const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedColor(label);
-    toast.success(`${label} 복사됨`);
-    setTimeout(() => setCopiedColor(null), 2000);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
+  const copyToClipboard = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedColor(label);
+      toast.success(`${label} 복사됨`);
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => setCopiedColor(null), 2000);
+    } catch {
+      toast.error("복사하지 못했습니다. 텍스트를 직접 선택해 복사해주세요.");
+    }
   };
 
   const semanticColors = [
@@ -93,12 +100,12 @@ const DesignSystem = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-lg border-b border-border">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => window.history.back()}>
+          <Button variant="ghost" size="icon" aria-label="홈으로 돌아가기" onClick={() => window.location.assign("/")}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
             <h1 className="text-2xl font-serif font-bold text-foreground">Design System</h1>
-            <p className="text-sm text-muted-foreground">사주포춘 앱 디자인 가이드</p>
+            <p className="text-sm text-muted-foreground">더포춘 앱 디자인 가이드</p>
           </div>
         </div>
       </header>
@@ -194,10 +201,10 @@ const DesignSystem = () => {
           </p>
           <div className="space-y-4">
             {typography.map((type) => (
-              <div key={type.name} className="flex items-baseline gap-4 py-3 border-b border-border">
+              <div key={type.name} className="flex flex-col md:flex-row md:items-baseline gap-4 py-3 border-b border-border">
                 <span className="w-32 text-sm text-muted-foreground">{type.name}</span>
                 <span className={type.class}>{type.sample}</span>
-                <span className="text-xs text-muted-foreground font-mono ml-auto">{type.class}</span>
+                <span className="text-xs text-muted-foreground font-mono break-words md:ml-auto">{type.class}</span>
               </div>
             ))}
           </div>
@@ -222,7 +229,7 @@ const DesignSystem = () => {
         <section>
           <h2 className="text-xl font-serif font-semibold mb-2">Border Radius</h2>
           <p className="text-sm text-muted-foreground mb-6">모서리 둥글기</p>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap gap-6">
             {borderRadius.map((radius) => (
               <div key={radius.name} className="text-center">
                 <div className={`${radius.class} bg-primary mb-2`} />
@@ -379,7 +386,7 @@ const DesignSystem = () => {
                 size="sm" 
                 className="mt-4"
                 onClick={() => {
-                  navigator.clipboard.writeText(JSON.stringify({
+                  void copyToClipboard(JSON.stringify({
                     colors: {
                       primary: "hsl(230, 45%, 22%)",
                       secondary: "hsl(38, 35%, 55%)",
@@ -398,8 +405,7 @@ const DesignSystem = () => {
                     },
                     spacing: { xs: "4px", sm: "8px", md: "16px", lg: "24px", xl: "32px" },
                     borderRadius: { default: "16px" }
-                  }, null, 2));
-                  toast.success("JSON 토큰 복사됨");
+                  }, null, 2), "JSON 토큰");
                 }}
               >
                 <Copy className="w-4 h-4 mr-2" />

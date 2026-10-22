@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
@@ -59,7 +60,7 @@ const ohangDetails: Record<string, {
 
 const OhangPentagon = ({ data }: OhangPentagonProps) => {
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
-  const maxValue = Math.max(...data.map((d) => d.value));
+  const maxValue = Math.max(1, ...data.map((d) => Number.isFinite(d.value) ? d.value : 0));
   const centerX = 120;
   const centerY = 120;
   const maxRadius = 90;
@@ -132,7 +133,7 @@ const OhangPentagon = ({ data }: OhangPentagonProps) => {
       <h3 className="text-sm text-muted-foreground mb-4">오행 균형 차트</h3>
       <p className="text-xs text-muted-foreground mb-4 text-center">각 오행을 터치하면 상세 설명을 볼 수 있습니다</p>
       <div className="flex justify-center">
-        <svg width="240" height="240" viewBox="0 0 240 240">
+        <svg width="240" height="240" viewBox="0 0 240 240" className="max-w-full" aria-label="오행 균형 차트">
           {/* 외곽 오각형 */}
           <path
             d={outerPath}
@@ -172,7 +173,7 @@ const OhangPentagon = ({ data }: OhangPentagonProps) => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             d={dataPath}
-            fill="url(#pentagonGradient)"
+            fill="hsl(var(--primary) / 0.2)"
             stroke="hsl(var(--primary))"
             strokeWidth="2"
             style={{ transformOrigin: `${centerX}px ${centerY}px` }}
@@ -201,7 +202,7 @@ const OhangPentagon = ({ data }: OhangPentagonProps) => {
               cy={point.y}
               r="8"
               fill={data[i].color}
-              stroke={selectedElement === data[i].element ? "white" : "white"}
+              stroke="hsl(var(--card))"
               strokeWidth={selectedElement === data[i].element ? 3 : 2}
               onClick={() => setSelectedElement(data[i].element)}
               style={{ cursor: "pointer" }}
@@ -247,7 +248,7 @@ const OhangPentagon = ({ data }: OhangPentagonProps) => {
       {/* 범례 */}
       <div className="flex justify-center gap-4 mt-4 flex-wrap">
         {data.map((item) => (
-          <button
+          <Button variant="ghost" aria-label={`${item.name} 상세 설명`} aria-pressed={selectedElement === item.element}
             key={item.element}
             onClick={() => setSelectedElement(item.element)}
             className={`flex items-center gap-1.5 px-2 py-1 rounded-lg transition-all ${
@@ -267,7 +268,7 @@ const OhangPentagon = ({ data }: OhangPentagonProps) => {
             <span className="text-xs text-muted-foreground">
               {item.element} {item.value}
             </span>
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -282,16 +283,16 @@ const OhangPentagon = ({ data }: OhangPentagonProps) => {
             className="mt-6 overflow-hidden"
           >
             <div 
-              className="rounded-xl p-5 relative"
-              style={{ backgroundColor: `${selectedData.color}15` }}
+              className="rounded-xl p-5 relative bg-muted"
+              
             >
               {/* 닫기 버튼 */}
-              <button
+              <Button variant="ghost" size="icon" aria-label="오행 설명 닫기"
                 onClick={() => setSelectedElement(null)}
                 className="absolute top-3 right-3 w-8 h-8 rounded-full bg-background/80 flex items-center justify-center hover:bg-background transition-colors"
               >
                 <X className="w-4 h-4 text-muted-foreground" />
-              </button>
+              </Button>
 
               {/* 헤더 */}
               <div className="flex items-center gap-3 mb-4">
@@ -299,10 +300,10 @@ const OhangPentagon = ({ data }: OhangPentagonProps) => {
                   className="w-12 h-12 rounded-xl flex items-center justify-center"
                   style={{ backgroundColor: selectedData.color }}
                 >
-                  <span className="text-2xl font-serif text-white">{selectedElement}</span>
+                  <span className="text-2xl font-serif text-primary-foreground">{selectedElement}</span>
                 </div>
                 <div>
-                  <h4 className="font-serif font-semibold text-foreground">{selectedDetail.title}</h4>
+                  <h4 className="font-serif font-semibold text-foreground pr-8">{selectedDetail.title}</h4>
                   <p className="text-sm text-muted-foreground">현재 수치: {selectedData.value}</p>
                 </div>
               </div>

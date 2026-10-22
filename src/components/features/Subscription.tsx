@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Check, Crown } from "lucide-react";
 import SubPageHeader from "@/components/common/SubPageHeader";
@@ -38,7 +39,7 @@ const Subscription = ({ onBack }: SubscriptionProps) => {
                 </li>
               ))}
             </ul>
-            <Button variant={plan.popular ? "default" : "outline"} className="w-full rounded-xl">
+            <Button disabled={plan.id === "free"} onClick={() => toast.info("프로토타입입니다. 구독이나 결제는 진행되지 않습니다.")} variant={plan.popular ? "default" : "outline"} className="w-full rounded-xl">
               {plan.id === "free" ? "현재 플랜" : "구독하기"}
             </Button>
           </motion.div>

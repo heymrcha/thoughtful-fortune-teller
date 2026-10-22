@@ -1,3 +1,5 @@
+import { useState, useId } from "react";
+import { getBirthYears, getBirthDayCount } from "@/lib/prototype-rules";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,23 +43,32 @@ interface BirthInputProps {
   onComplete?: (data: { year: string; month: string; day: string; hour: string; calendarType: string; gender: string }) => void;
 }
 
-export const BirthInput = ({ label }: BirthInputProps) => {
+export const BirthInput = ({ label, onComplete }: BirthInputProps) => {
+  const id = useId();
+  const [data, setData] = useState({ name: "", year: "", month: "", day: "", hour: "", calendarType: "solar", gender: "male" });
+  const update = (field: keyof typeof data, value: string) => {
+    const next = { ...data, [field]: value };
+    if (Number(next.day) > getBirthDayCount(next.year, next.month, next.calendarType)) next.day = "";
+    setData(next);
+    onComplete?.(next);
+  };
+  const dayCount = getBirthDayCount(data.year, data.month, data.calendarType);
   return (
     <div className="space-y-4">
       {label && <h4 className="text-sm font-medium text-foreground">{label}</h4>}
       
       <FormField label="이름">
-        <Input placeholder="이름을 입력하세요" className="bg-muted border-0" />
+        <Input aria-label={`${label ?? "내 정보"} 이름`} value={data.name} onChange={(e) => update("name", e.target.value)} placeholder="이름을 입력하세요" className="bg-muted border-0" />
       </FormField>
       
       <div className="grid grid-cols-3 gap-2">
         <FormField label="년">
-          <Select>
-            <SelectTrigger className="bg-muted border-0">
+          <Select value={data.year} onValueChange={(value) => update("year", value)}>
+            <SelectTrigger aria-label={`${label ?? "내 정보"} 년도`} className="bg-muted border-0">
               <SelectValue placeholder="년도" />
             </SelectTrigger>
             <SelectContent>
-              {Array.from({ length: 100 }, (_, i) => 2024 - i).map((year) => (
+              {getBirthYears().map((year) => (
                 <SelectItem key={year} value={year.toString()}>
                   {year}년
                 </SelectItem>
@@ -66,8 +77,8 @@ export const BirthInput = ({ label }: BirthInputProps) => {
           </Select>
         </FormField>
         <FormField label="월">
-          <Select>
-            <SelectTrigger className="bg-muted border-0">
+          <Select value={data.month} onValueChange={(value) => update("month", value)}>
+            <SelectTrigger aria-label={`${label ?? "내 정보"} 월`} className="bg-muted border-0">
               <SelectValue placeholder="월" />
             </SelectTrigger>
             <SelectContent>
@@ -80,12 +91,12 @@ export const BirthInput = ({ label }: BirthInputProps) => {
           </Select>
         </FormField>
         <FormField label="일">
-          <Select>
-            <SelectTrigger className="bg-muted border-0">
+          <Select value={data.day} onValueChange={(value) => update("day", value)}>
+            <SelectTrigger aria-label={`${label ?? "내 정보"} 일`} className="bg-muted border-0">
               <SelectValue placeholder="일" />
             </SelectTrigger>
             <SelectContent>
-              {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+              {Array.from({ length: dayCount }, (_, i) => i + 1).map((day) => (
                 <SelectItem key={day} value={day.toString()}>
                   {day}일
                 </SelectItem>
@@ -96,8 +107,8 @@ export const BirthInput = ({ label }: BirthInputProps) => {
       </div>
 
       <FormField label="태어난 시간">
-        <Select>
-          <SelectTrigger className="bg-muted border-0">
+        <Select value={data.hour} onValueChange={(value) => update("hour", value)}>
+          <SelectTrigger aria-label={`${label ?? "내 정보"} 태어난 시간`} className="bg-muted border-0">
             <SelectValue placeholder="시간 선택" />
           </SelectTrigger>
           <SelectContent>
@@ -119,31 +130,31 @@ export const BirthInput = ({ label }: BirthInputProps) => {
       </FormField>
 
       <FormField label="양력/음력">
-        <RadioGroup defaultValue="solar" className="flex gap-4">
+        <RadioGroup value={data.calendarType} onValueChange={(value) => update("calendarType", value)} className="flex gap-4">
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="solar" id="solar" />
-            <Label htmlFor="solar" className="text-foreground">양력</Label>
+            <RadioGroupItem value="solar" id={`${id}-solar`} />
+            <Label htmlFor={`${id}-solar`} className="text-foreground">양력</Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="lunar" id="lunar" />
-            <Label htmlFor="lunar" className="text-foreground">음력</Label>
+            <RadioGroupItem value="lunar" id={`${id}-lunar`} />
+            <Label htmlFor={`${id}-lunar`} className="text-foreground">음력</Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="lunar-leap" id="lunar-leap" />
-            <Label htmlFor="lunar-leap" className="text-foreground">음력(윤달)</Label>
+            <RadioGroupItem value="lunar-leap" id={`${id}-lunar-leap`} />
+            <Label htmlFor={`${id}-lunar-leap`} className="text-foreground">음력(윤달)</Label>
           </div>
         </RadioGroup>
       </FormField>
 
       <FormField label="성별">
-        <RadioGroup defaultValue="male" className="flex gap-4">
+        <RadioGroup value={data.gender} onValueChange={(value) => update("gender", value)} className="flex gap-4">
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="male" id="male" />
-            <Label htmlFor="male" className="text-foreground">남성</Label>
+            <RadioGroupItem value="male" id={`${id}-male`} />
+            <Label htmlFor={`${id}-male`} className="text-foreground">남성</Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="female" id="female" />
-            <Label htmlFor="female" className="text-foreground">여성</Label>
+            <RadioGroupItem value="female" id={`${id}-female`} />
+            <Label htmlFor={`${id}-female`} className="text-foreground">여성</Label>
           </div>
         </RadioGroup>
       </FormField>
