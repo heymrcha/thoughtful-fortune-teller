@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import SampleNotice from "@/components/common/SampleNotice";
 import { motion } from "framer-motion";
 import SubPageHeader from "@/components/common/SubPageHeader";
 import { Button } from "@/components/ui/button";
+import { shuffle } from "@/lib/prototype-rules";
 
 interface TarotReadingProps {
   type: string;
@@ -21,7 +23,8 @@ const TarotReading = ({ type, title, onBack }: TarotReadingProps) => {
   const [step, setStep] = useState<"select" | "result">("select");
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
 
-  const cards = Object.keys(cardMeanings);
+  // 위치마다 항상 같은 카드가 나오지 않도록 뽑을 때마다 덱을 섞는다
+  const [cards, setCards] = useState(() => shuffle(Object.keys(cardMeanings)));
 
   useEffect(() => {
     if (!selectedCard || step !== "select") return;
@@ -31,6 +34,7 @@ const TarotReading = ({ type, title, onBack }: TarotReadingProps) => {
 
   const resetReading = () => {
     setSelectedCard(null);
+    setCards(shuffle(Object.keys(cardMeanings)));
     setStep("select");
   };
 
@@ -86,6 +90,8 @@ const TarotReading = ({ type, title, onBack }: TarotReadingProps) => {
       className="space-y-6"
     >
       <SubPageHeader title={title} subtitle="카드 해석" onBack={resetReading} />
+
+      <SampleNotice>샘플 해석입니다. 선택한 주제와 관계없이 카드별 고정 문구가 표시됩니다.</SampleNotice>
 
       <motion.div
         initial={{ opacity: 0, scale: 0.8, rotateY: 180 }}

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { User, Users, CreditCard, Bell, Settings, ChevronRight, Calendar } from "lucide-react";
+import { relationProfiles } from "@/lib/sample-data";
 
 interface MyTabProps {
   onNavigate: (destination: string) => void;
@@ -58,7 +59,7 @@ const MyTab = ({ onNavigate }: MyTabProps) => {
           transition={{ delay: 0.15 }}
           className="bg-card rounded-2xl p-4 shadow-card text-center"
         >
-          <div className="text-2xl font-bold text-secondary">3</div>
+          <div className="text-2xl font-bold text-secondary">{relationProfiles.length}</div>
           <div className="text-xs text-muted-foreground mt-1">등록된 관계</div>
         </motion.div>
         <motion.div

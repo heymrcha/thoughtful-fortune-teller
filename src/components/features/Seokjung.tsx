@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SampleNotice from "@/components/common/SampleNotice";
 import { motion } from "framer-motion";
 import { DollarSign, Home, Heart, Award, Plane } from "lucide-react";
 import SubPageHeader from "@/components/common/SubPageHeader";
@@ -60,6 +61,8 @@ const Seokjung = ({ onBack }: SeokjungProps) => {
         subtitle="상황별 심화 운세 해석" 
         onBack={onBack} 
       />
+
+      <SampleNotice />
 
       {/* Summary */}
       <motion.div

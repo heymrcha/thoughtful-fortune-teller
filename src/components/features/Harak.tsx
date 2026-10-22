@@ -1,13 +1,15 @@
 import { useState } from "react";
+import SampleNotice from "@/components/common/SampleNotice";
 import { motion } from "framer-motion";
 import SubPageHeader from "@/components/common/SubPageHeader";
 import { Button } from "@/components/ui/button";
 
 interface HarakProps {
   onBack: () => void;
+  onConsult: () => void;
 }
 
-const Harak = ({ onBack }: HarakProps) => {
+const Harak = ({ onBack, onConsult }: HarakProps) => {
   const [viewType, setViewType] = useState<"pre" | "post">("pre");
 
   const preHexagram = {
@@ -50,6 +52,8 @@ const Harak = ({ onBack }: HarakProps) => {
         subtitle="선천운과 후천운의 괘 해석" 
         onBack={onBack} 
       />
+
+      <SampleNotice />
 
       {/* Toggle */}
       <motion.div
@@ -164,6 +168,7 @@ const Harak = ({ onBack }: HarakProps) => {
       <div className="pb-8">
         <Button 
           variant="outline"
+          onClick={onConsult}
           className="w-full h-14 text-lg font-medium rounded-xl"
         >
           전문 상담 받기

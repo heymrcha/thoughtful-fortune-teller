@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import SampleNotice from "@/components/common/SampleNotice";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import SajuChart from "@/components/saju/SajuChart";
@@ -47,6 +48,8 @@ const SajuResult = ({ onBack }: SajuResultProps) => {
           <p className="text-sm text-muted-foreground">나의 본질과 삶의 흐름</p>
         </div>
       </div>
+
+      <SampleNotice />
 
       {/* Summary Card */}
       <motion.div

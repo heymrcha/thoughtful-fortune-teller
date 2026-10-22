@@ -1,5 +1,5 @@
-import { describe, expect, test } from "bun:test";
-import { getBirthYears, getBirthDayCount, getRecommendations, validatePhoto } from "./prototype-rules";
+import { describe, expect, test } from "vitest";
+import { getBirthYears, getBirthDayCount, getRecommendations, isBirthComplete, shuffle, validatePhoto } from "./prototype-rules";
 
 describe("prototype input rules", () => {
   test("birth years include the current year", () => {
@@ -31,5 +31,28 @@ describe("emotional recommendation count", () => {
   });
   test("each count from 4 through 8 is supported", () => {
     for (const count of [4, 5, 6, 7, 8]) expect(getRecommendations(count)).toHaveLength(count);
+  });
+});
+
+describe("birth completeness", () => {
+  test("requires year, month, day and hour", () => {
+    expect(isBirthComplete({ year: "1990", month: "5", day: "15", hour: "07-09" })).toBe(true);
+    expect(isBirthComplete({ year: "1990", month: "5", day: "15" })).toBe(false);
+    expect(isBirthComplete({})).toBe(false);
+  });
+  test("unknown birth hour is accepted as an explicit choice", () => {
+    expect(isBirthComplete({ year: "1990", month: "5", day: "15", hour: "unknown" })).toBe(true);
+  });
+});
+
+describe("shuffle", () => {
+  test("keeps every item and does not mutate the input", () => {
+    const source = [1, 2, 3, 4, 5];
+    const result = shuffle(source);
+    expect([...result].sort()).toEqual(source);
+    expect(source).toEqual([1, 2, 3, 4, 5]);
+  });
+  test("is deterministic for a fixed random source", () => {
+    expect(shuffle([1, 2, 3], () => 0)).toEqual([2, 3, 1]);
   });
 });

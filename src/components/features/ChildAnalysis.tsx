@@ -1,17 +1,21 @@
 import { useState } from "react";
+import SampleNotice from "@/components/common/SampleNotice";
 import { motion } from "framer-motion";
 import SubPageHeader from "@/components/common/SubPageHeader";
-import { InputForm, BirthInput, FormField } from "@/components/common/InputForm";
+import { InputForm, BirthInput, type BirthData } from "@/components/common/InputForm";
+import { isBirthComplete } from "@/lib/prototype-rules";
 import { Button } from "@/components/ui/button";
 import OhangChart from "@/components/saju/OhangChart";
 import InterpretationSection from "@/components/saju/InterpretationSection";
 
 interface ChildAnalysisProps {
   onBack: () => void;
+  onConsult: () => void;
 }
 
-const ChildAnalysis = ({ onBack }: ChildAnalysisProps) => {
+const ChildAnalysis = ({ onBack, onConsult }: ChildAnalysisProps) => {
   const [step, setStep] = useState<"input" | "result">("input");
+  const [child, setChild] = useState<BirthData | null>(null);
 
   const ohangData = [
     { element: "木", name: "목", value: 35, color: "#4A7C59" },
@@ -48,11 +52,12 @@ const ChildAnalysis = ({ onBack }: ChildAnalysisProps) => {
         </motion.div>
 
         <InputForm title="자녀 정보 입력">
-          <BirthInput label="" />
+          <BirthInput ariaPrefix="자녀 정보" onComplete={setChild} />
         </InputForm>
 
         <Button 
           onClick={() => setStep("result")}
+          disabled={!child || !isBirthComplete(child)}
           className="w-full h-14 text-lg font-medium bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl"
         >
           분석 시작
@@ -70,9 +75,11 @@ const ChildAnalysis = ({ onBack }: ChildAnalysisProps) => {
     >
       <SubPageHeader 
         title="자녀분석 결과" 
-        subtitle="민수 (2018년 3월 15일)" 
+        subtitle={`${child?.name || "아이"} (${child?.year}년 ${child?.month}월 ${child?.day}일)`} 
         onBack={() => setStep("input")} 
       />
+
+      <SampleNotice />
 
       {/* Summary */}
       <motion.div
@@ -83,7 +90,7 @@ const ChildAnalysis = ({ onBack }: ChildAnalysisProps) => {
       >
         <h2 className="text-sm text-primary-foreground/80 mb-2">핵심 성향</h2>
         <p className="text-lg font-serif text-primary-foreground leading-relaxed">
-          민수는 호기심이 많고 창의적인 목(木)의 기운을 가진 아이입니다.
+          이 아이는 호기심이 많고 창의적인 목(木)의 기운을 지녔습니다.
           새로운 것을 탐구하고 성장하려는 에너지가 강합니다.
         </p>
       </motion.div>
@@ -157,6 +164,7 @@ const ChildAnalysis = ({ onBack }: ChildAnalysisProps) => {
       <div className="pb-8">
         <Button 
           variant="outline"
+          onClick={onConsult}
           className="w-full h-14 text-lg font-medium rounded-xl"
         >
           전문 상담 받기

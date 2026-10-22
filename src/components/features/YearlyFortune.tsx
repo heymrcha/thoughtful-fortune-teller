@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SampleNotice from "@/components/common/SampleNotice";
 import { motion } from "framer-motion";
 import { ChevronDown, ChevronUp, DollarSign, Heart, BookOpen, Activity } from "lucide-react";
 import SubPageHeader from "@/components/common/SubPageHeader";
@@ -49,6 +50,8 @@ const YearlyFortune = ({ onBack }: YearlyFortuneProps) => {
         subtitle={`${currentYear}년 운세`} 
         onBack={onBack} 
       />
+
+      <SampleNotice />
 
       {/* Summary */}
       <motion.div

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SampleNotice from "@/components/common/SampleNotice";
 import { motion } from "framer-motion";
 import SubPageHeader from "@/components/common/SubPageHeader";
 
@@ -37,6 +38,8 @@ const Tojeong = ({ onBack }: TojeongProps) => {
         subtitle="전통 방식의 한 해 운세" 
         onBack={onBack} 
       />
+
+      <SampleNotice />
 
       {/* Summary */}
       <motion.div

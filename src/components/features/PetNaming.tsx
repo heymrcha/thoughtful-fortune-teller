@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SampleNotice from "@/components/common/SampleNotice";
 import { motion } from "framer-motion";
 import SubPageHeader from "@/components/common/SubPageHeader";
 import { Input } from "@/components/ui/input";
@@ -59,6 +60,8 @@ const PetNaming = ({ onBack }: PetNamingProps) => {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
       <SubPageHeader title="추천 이름" onBack={() => setStep("input")} />
+
+      <SampleNotice>샘플 추천입니다. 입력한 정보와 관계없이 같은 이름이 표시됩니다.</SampleNotice>
       
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-premium rounded-2xl p-5 shadow-elevated">
         <p className="text-primary-foreground text-sm text-center">사주에 맞는 이름을 추천해 드립니다</p>

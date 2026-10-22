@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SampleNotice from "@/components/common/SampleNotice";
 import { motion } from "framer-motion";
 import { Search, Heart, Star } from "lucide-react";
 import SubPageHeader from "@/components/common/SubPageHeader";
@@ -9,12 +10,12 @@ interface CelebrityMatchProps {
 }
 
 const celebrities = [
-  { id: 1, name: "아이유", birth: "1993.05.16", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face" },
-  { id: 2, name: "뷔 (김태형)", birth: "1995.12.30", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" },
-  { id: 3, name: "수지", birth: "1994.10.10", image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face" },
-  { id: 4, name: "공유", birth: "1979.07.10", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" },
-  { id: 5, name: "전지현", birth: "1981.10.30", image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" },
-  { id: 6, name: "현빈", birth: "1982.09.25", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" },
+  { id: 1, name: "아이유", birth: "1993.05.16" },
+  { id: 2, name: "뷔 (김태형)", birth: "1995.12.30" },
+  { id: 3, name: "수지", birth: "1994.10.10" },
+  { id: 4, name: "공유", birth: "1979.07.10" },
+  { id: 5, name: "전지현", birth: "1981.10.30" },
+  { id: 6, name: "현빈", birth: "1982.09.25" },
 ];
 
 const CelebrityMatch = ({ onBack }: CelebrityMatchProps) => {
@@ -46,6 +47,8 @@ const CelebrityMatch = ({ onBack }: CelebrityMatchProps) => {
           onBack={() => setShowResult(false)} 
         />
 
+      <SampleNotice>샘플 결과입니다. 선택한 연예인과 관계없이 같은 해석이 표시됩니다.</SampleNotice>
+
         {/* Match Display */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -62,11 +65,12 @@ const CelebrityMatch = ({ onBack }: CelebrityMatchProps) => {
             </div>
             <Heart className="w-8 h-8 text-accent fill-accent animate-pulse" />
             <div className="text-center">
-              <img
-                src={celeb?.image}
-                alt={celeb?.name}
-                className="w-16 h-16 rounded-full object-cover mb-2 mx-auto"
-              />
+              <div
+                aria-hidden="true"
+                className="w-16 h-16 rounded-full bg-gradient-brass flex items-center justify-center mb-2 mx-auto text-xl font-serif text-primary-foreground"
+              >
+                {celeb?.name.charAt(0)}
+              </div>
               <p className="text-sm text-muted-foreground">{celeb?.name}</p>
             </div>
           </div>
@@ -162,6 +166,10 @@ const CelebrityMatch = ({ onBack }: CelebrityMatchProps) => {
       >
         <h3 className="font-serif font-semibold text-foreground">인기 연예인</h3>
         
+        {filteredCelebs.length === 0 && (
+          <p className="text-sm text-muted-foreground text-center py-8">검색 결과가 없습니다.</p>
+        )}
+
         <div className="grid grid-cols-2 gap-3">
           {filteredCelebs.map((celeb, index) => (
             <motion.button
@@ -172,11 +180,12 @@ const CelebrityMatch = ({ onBack }: CelebrityMatchProps) => {
               onClick={() => handleCelebClick(celeb.id)}
               className="bg-card rounded-xl p-4 shadow-soft hover:shadow-card transition-all text-left"
             >
-              <img
-                src={celeb.image}
-                alt={celeb.name}
-                className="w-14 h-14 rounded-full object-cover mx-auto mb-3"
-              />
+              <div
+                aria-hidden="true"
+                className="w-14 h-14 rounded-full bg-gradient-brass flex items-center justify-center mx-auto mb-3 text-lg font-serif text-primary-foreground"
+              >
+                {celeb.name.charAt(0)}
+              </div>
               <h4 className="font-medium text-foreground text-center">{celeb.name}</h4>
               <p className="text-xs text-muted-foreground text-center mt-1">{celeb.birth}</p>
             </motion.button>

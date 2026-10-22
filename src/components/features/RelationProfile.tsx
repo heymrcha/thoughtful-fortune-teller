@@ -3,19 +3,14 @@ import { motion } from "framer-motion";
 import { Plus, User, Trash2 } from "lucide-react";
 import SubPageHeader from "@/components/common/SubPageHeader";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { relationProfiles } from "@/lib/sample-data";
 
 interface RelationProfileProps {
   onBack: () => void;
 }
 
-const initialProfiles = [
-  { id: 1, name: "김영희", relation: "배우자", birth: "1992.08.20" },
-  { id: 2, name: "홍민수", relation: "자녀", birth: "2018.03.15" },
-];
-
 const RelationProfile = ({ onBack }: RelationProfileProps) => {
-  const [profiles] = useState(initialProfiles);
+  const [profiles] = useState(relationProfiles);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
