@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import BottomNav from "@/components/layout/BottomNav";
 import HomeTab from "@/components/tabs/HomeTab";
@@ -101,6 +101,10 @@ const Index = () => {
   const [subPage, setSubPage] = useState<SubPage>(null);
   const [selectedCounselor, setSelectedCounselor] = useState<typeof counselors[0] | null>(null);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [activeTab, subPage]);
+
   const handleNavigate = (destination: string) => {
     setSubPage(destination as SubPage);
   };
@@ -199,7 +203,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <main className="max-w-lg mx-auto px-4 pb-24">
         <AnimatePresence mode="wait">
-          {renderContent()}
+          <div key={`${activeTab}:${subPage ?? "main"}`}>{renderContent()}</div>
         </AnimatePresence>
       </main>
       <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />

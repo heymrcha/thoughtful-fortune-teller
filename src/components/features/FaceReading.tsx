@@ -1,8 +1,10 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Camera, Upload, X, Sparkles, ArrowLeft, Share2, RotateCcw, Heart, AlertTriangle, Scissors, Palette, Shirt, Droplets, Briefcase, MessageCircle, Users, Star, TrendingUp, Flame, Shield, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
+import { validatePhoto } from "@/lib/prototype-rules";
 
 interface FaceReadingProps {
   onBack: () => void;
@@ -146,51 +148,73 @@ const FaceReading = ({ onBack }: FaceReadingProps) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!photoFile) {
+      setSelectedImage(null);
+      return;
+    }
+    const url = URL.createObjectURL(photoFile);
+    setSelectedImage(url);
+    return () => URL.revokeObjectURL(url);
+  }, [photoFile]);
+
+  useEffect(() => {
+    if (step !== "analyzing") return;
+    const startedAt = Date.now();
+    const interval = window.setInterval(() => {
+      setAnalysisProgress(Math.min(100, ((Date.now() - startedAt) / 3000) * 100));
+    }, 100);
+    const timeout = window.setTimeout(() => setStep("result"), 3500);
+    return () => {
+      window.clearInterval(interval);
+      window.clearTimeout(timeout);
+    };
+  }, [step]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
+    e.target.value = "";
+    if (!file) return;
+    const error = validatePhoto(file);
+    setUploadError(error);
+    if (error) return;
+    setPhotoFile(file);
   };
 
   const startAnalysis = () => {
+    if (!selectedImage || uploadError || step !== "upload") return;
     setStep("analyzing");
     setAnalysisProgress(0);
-
-    const interval = setInterval(() => {
-      setAnalysisProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setTimeout(() => setStep("result"), 500);
-          return 100;
-        }
-        return prev + Math.random() * 15;
-      });
-    }, 300);
   };
 
   const resetAnalysis = () => {
+    setPhotoFile(null);
     setSelectedImage(null);
+    setUploadError(null);
     setStep("upload");
     setAnalysisProgress(0);
   };
 
   const shareResult = async () => {
-    if (navigator.share) {
-      try {
+    const text = `더포춘 동물관상 예시: ${mockResult.mainAnimal.emoji} ${mockResult.mainAnimal.name}\n실제 사진 분석이 아닌 샘플 결과입니다.`;
+    try {
+      if (navigator.share) {
         await navigator.share({
           title: "나의 동물관상 결과",
-          text: `나의 동물상은 ${mockResult.mainAnimal.emoji} ${mockResult.mainAnimal.name}입니다!`,
+          text,
           url: window.location.href,
         });
-      } catch (err) {
-        console.log("공유 취소됨");
+      } else {
+        await navigator.clipboard.writeText(text);
+        toast.success("예시 결과를 복사했습니다.");
       }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      toast.error("공유하지 못했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -203,9 +227,9 @@ const FaceReading = ({ onBack }: FaceReadingProps) => {
         className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border"
       >
         <div className="flex items-center justify-between p-4">
-          <button onClick={onBack} className="p-2 -ml-2 text-muted-foreground">
+          <Button variant="ghost" size="icon" aria-label="뒤로가기" onClick={onBack} className="-ml-2 text-muted-foreground">
             <ArrowLeft className="w-5 h-5" />
-          </button>
+          </Button>
           <h1 className="text-lg font-bold">AI 동물관상</h1>
           <div className="w-9" />
         </div>
@@ -230,6 +254,7 @@ const FaceReading = ({ onBack }: FaceReadingProps) => {
                 40가지 전통 동물관상 중<br />
                 당신의 유형을 AI가 분석합니다
               </p>
+              <p className="text-xs text-muted-foreground">샘플 체험 · 사진은 전송되지 않으며 실제 분석은 진행하지 않습니다.</p>
             </div>
 
             {/* Image Preview or Upload Area */}
@@ -242,20 +267,24 @@ const FaceReading = ({ onBack }: FaceReadingProps) => {
                 >
                   <img
                     src={selectedImage}
-                    alt="Selected"
+                    alt="선택한 사진"
                     className="w-full h-full object-cover"
+                    onError={() => {
+                      setPhotoFile(null);
+                      setUploadError("사진을 열 수 없습니다. 다른 사진을 선택해주세요.");
+                    }}
                   />
-                  <button
+                  <Button size="icon" variant="secondary" aria-label="사진 삭제"
                     onClick={resetAnalysis}
-                    className="absolute top-3 right-3 p-2 bg-black/50 rounded-full text-white"
+                    className="absolute top-3 right-3 rounded-full"
                   >
                     <X className="w-4 h-4" />
-                  </button>
+                  </Button>
                 </motion.div>
               ) : (
-                <div
+                <Button variant="outline"
                   onClick={() => fileInputRef.current?.click()}
-                  className="aspect-square rounded-2xl border-2 border-dashed border-muted-foreground/30 flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-primary/50 transition-colors bg-muted/30"
+                  className="w-full h-auto aspect-square rounded-2xl border-2 border-dashed border-muted-foreground/30 flex flex-col items-center justify-center gap-4 whitespace-normal hover:border-primary/50 bg-muted/30"
                 >
                   <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
                     <Camera className="w-10 h-10 text-muted-foreground" />
@@ -266,16 +295,19 @@ const FaceReading = ({ onBack }: FaceReadingProps) => {
                       정면 얼굴 사진을 선택해주세요
                     </p>
                   </div>
-                </div>
+                </Button>
               )}
 
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/webp"
+                aria-label="갤러리 사진 선택"
                 onChange={handleFileSelect}
                 className="hidden"
               />
+              <input ref={cameraInputRef} type="file" accept="image/jpeg,image/png,image/webp" capture="user" aria-label="카메라 사진 촬영" onChange={handleFileSelect} className="hidden" />
+              {uploadError && <p role="alert" className="text-sm text-destructive">{uploadError}</p>}
 
               {!selectedImage && (
                 <div className="grid grid-cols-2 gap-3">
@@ -302,6 +334,7 @@ const FaceReading = ({ onBack }: FaceReadingProps) => {
                 <Button
                   className="w-full h-14 text-lg bg-gradient-premium"
                   onClick={startAnalysis}
+                  disabled={Boolean(uploadError)}
                 >
                   <Sparkles className="w-5 h-5 mr-2" />
                   동물상 분석 시작
@@ -372,6 +405,7 @@ const FaceReading = ({ onBack }: FaceReadingProps) => {
             className="p-6 space-y-6"
           >
             {/* 1. Main Animal Result */}
+            <p className="text-xs text-muted-foreground text-center">샘플 결과 · 사진에서 성격이나 직업 적성을 판정한 결과가 아닙니다.</p>
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -538,7 +572,7 @@ const FaceReading = ({ onBack }: FaceReadingProps) => {
                 {/* Good Compatibility */}
                 <div className="bg-card rounded-xl border border-border p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <Heart className="w-4 h-4 text-pink-500" />
+                    <Heart className="w-4 h-4 text-accent" />
                     <span className="font-medium text-sm">잘 맞는 동물상</span>
                   </div>
                   <div className="space-y-3">
@@ -559,7 +593,7 @@ const FaceReading = ({ onBack }: FaceReadingProps) => {
                 {/* Caution Compatibility */}
                 <div className="bg-card rounded-xl border border-border p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <AlertTriangle className="w-4 h-4 text-amber-500" />
+                    <AlertTriangle className="w-4 h-4 text-secondary" />
                     <span className="font-medium text-sm">주의가 필요한 동물상</span>
                   </div>
                   <div className="space-y-3">
@@ -613,7 +647,7 @@ const FaceReading = ({ onBack }: FaceReadingProps) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.85 }}
-              className="flex gap-3 pt-4"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4"
             >
               <Button variant="outline" className="flex-1" onClick={resetAnalysis}>
                 <RotateCcw className="w-4 h-4 mr-2" />
@@ -649,14 +683,14 @@ const ResultSection = ({
 }: ResultSectionProps) => {
   const bgColors = {
     default: "bg-card",
-    positive: "bg-emerald-50 dark:bg-emerald-950/20",
-    warning: "bg-amber-50 dark:bg-amber-950/20",
+    positive: "bg-accent/10",
+    warning: "bg-secondary/10",
   };
 
   const bulletColors = {
     default: "bg-primary",
-    positive: "bg-emerald-500",
-    warning: "bg-amber-500",
+    positive: "bg-accent",
+    warning: "bg-secondary",
   };
 
   return (
