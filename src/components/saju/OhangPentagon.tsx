@@ -224,7 +224,7 @@ const OhangPentagon = ({ data }: OhangPentagonProps) => {
                   textAnchor="middle"
                   dominantBaseline="middle"
                   className="text-sm font-serif"
-                  fill={selectedElement === item.element ? item.color : item.color}
+                  fill={item.color}
                   fontWeight={selectedElement === item.element ? "bold" : "normal"}
                 >
                   {item.element}

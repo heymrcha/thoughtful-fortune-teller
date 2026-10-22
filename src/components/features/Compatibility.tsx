@@ -1,16 +1,22 @@
 import { useState } from "react";
+import SampleNotice from "@/components/common/SampleNotice";
 import { motion } from "framer-motion";
 import { Heart, Sparkles, AlertTriangle, MessageCircle } from "lucide-react";
 import SubPageHeader from "@/components/common/SubPageHeader";
-import { InputForm, BirthInput } from "@/components/common/InputForm";
+import { InputForm, BirthInput, type BirthData } from "@/components/common/InputForm";
+import { isBirthComplete } from "@/lib/prototype-rules";
 import { Button } from "@/components/ui/button";
 
 interface CompatibilityProps {
   onBack: () => void;
+  onConsult: () => void;
 }
 
-const Compatibility = ({ onBack }: CompatibilityProps) => {
+const Compatibility = ({ onBack, onConsult }: CompatibilityProps) => {
   const [step, setStep] = useState<"input" | "result">("input");
+  const [mine, setMine] = useState<BirthData | null>(null);
+  const [partner, setPartner] = useState<BirthData | null>(null);
+  const canSubmit = Boolean(mine && partner && isBirthComplete(mine) && isBirthComplete(partner));
 
   if (step === "input") {
     return (
@@ -39,15 +45,16 @@ const Compatibility = ({ onBack }: CompatibilityProps) => {
         </motion.div>
 
         <InputForm title="내 정보">
-          <BirthInput label="" />
+          <BirthInput ariaPrefix="내 정보" onComplete={setMine} />
         </InputForm>
 
         <InputForm title="상대방 정보">
-          <BirthInput label="" />
+          <BirthInput ariaPrefix="상대방 정보" onComplete={setPartner} />
         </InputForm>
 
         <Button 
           onClick={() => setStep("result")}
+          disabled={!canSubmit}
           className="w-full h-14 text-lg font-medium bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl"
         >
           궁합 보기
@@ -65,9 +72,11 @@ const Compatibility = ({ onBack }: CompatibilityProps) => {
     >
       <SubPageHeader 
         title="궁합 결과" 
-        subtitle="홍길동 ♥ 김철수" 
+        subtitle={`${mine?.name || "나"} ♥ ${partner?.name || "상대방"}`} 
         onBack={() => setStep("input")} 
       />
+
+      <SampleNotice />
 
       {/* Overall Score */}
       <motion.div
@@ -81,14 +90,14 @@ const Compatibility = ({ onBack }: CompatibilityProps) => {
             <div className="w-16 h-16 rounded-full bg-gradient-premium flex items-center justify-center mb-2">
               <span className="text-2xl font-serif text-primary-foreground">丙</span>
             </div>
-            <p className="text-sm text-muted-foreground">홍길동</p>
+            <p className="text-sm text-muted-foreground">{mine?.name || "나"}</p>
           </div>
           <Heart className="w-8 h-8 text-accent fill-accent" />
           <div className="text-center">
             <div className="w-16 h-16 rounded-full bg-gradient-brass flex items-center justify-center mb-2">
               <span className="text-2xl font-serif text-primary-foreground">壬</span>
             </div>
-            <p className="text-sm text-muted-foreground">김철수</p>
+            <p className="text-sm text-muted-foreground">{partner?.name || "상대방"}</p>
           </div>
         </div>
         <div className="text-3xl font-bold text-secondary mb-1">85점</div>
@@ -129,7 +138,7 @@ const Compatibility = ({ onBack }: CompatibilityProps) => {
           </div>
           <div className="flex flex-col items-center">
             <div className="text-xl">↔</div>
-            <p className="text-xs text-muted-foreground mt-1">상생</p>
+            <p className="text-xs text-muted-foreground mt-1">상극</p>
           </div>
           <div className="text-center">
             <div 
@@ -217,6 +226,7 @@ const Compatibility = ({ onBack }: CompatibilityProps) => {
       <div className="pb-8">
         <Button 
           variant="outline"
+          onClick={onConsult}
           className="w-full h-14 text-lg font-medium rounded-xl"
         >
           전문 상담 받기

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import SampleNotice from "@/components/common/SampleNotice";
 import SubPageHeader from "@/components/common/SubPageHeader";
 import OhangChart from "@/components/saju/OhangChart";
 import InterpretationSection from "@/components/saju/InterpretationSection";
@@ -7,6 +8,7 @@ import { Button } from "@/components/ui/button";
 
 interface DaeunAnalysisProps {
   onBack: () => void;
+  onConsult: () => void;
 }
 
 const daeunPeriods = [
@@ -20,7 +22,7 @@ const daeunPeriods = [
   { age: "71-80", heavenly: "辛", earthly: "未", current: false },
 ];
 
-const DaeunAnalysis = ({ onBack }: DaeunAnalysisProps) => {
+const DaeunAnalysis = ({ onBack, onConsult }: DaeunAnalysisProps) => {
   const ohangData = [
     { element: "木", name: "목", value: 30, color: "#4A7C59" },
     { element: "火", name: "화", value: 25, color: "#C75146" },
@@ -41,6 +43,8 @@ const DaeunAnalysis = ({ onBack }: DaeunAnalysisProps) => {
         subtitle="10년 단위 삶의 큰 흐름" 
         onBack={onBack} 
       />
+
+      <SampleNotice />
 
       {/* Summary */}
       <motion.div
@@ -164,6 +168,7 @@ const DaeunAnalysis = ({ onBack }: DaeunAnalysisProps) => {
         />
         <Button 
           variant="outline"
+          onClick={onConsult}
           className="w-full h-14 text-lg font-medium rounded-xl"
         >
           전문 상담 받기

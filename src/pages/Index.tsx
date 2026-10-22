@@ -7,6 +7,7 @@ import TarotTab from "@/components/tabs/TarotTab";
 import ConsultTab from "@/components/tabs/ConsultTab";
 import MyTab from "@/components/tabs/MyTab";
 import SajuResult from "@/components/tabs/SajuResult";
+import type { Counselor } from "@/lib/sample-data";
 
 // Home Features
 import ChildAnalysis from "@/components/features/ChildAnalysis";
@@ -66,40 +67,10 @@ type SubPage =
   | "notification"
   | "settings";
 
-const counselors = [
-  {
-    id: 1,
-    name: "혜안 선생",
-    specialty: "사주명리 · 궁합",
-    rating: 4.9,
-    reviews: 1234,
-    available: true,
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
-  },
-  {
-    id: 2,
-    name: "명월 선생",
-    specialty: "타로 · 신년운세",
-    rating: 4.8,
-    reviews: 892,
-    available: true,
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-  },
-  {
-    id: 3,
-    name: "청운 선생",
-    specialty: "자녀분석 · 대운",
-    rating: 4.9,
-    reviews: 567,
-    available: false,
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
-  },
-];
-
 const Index = () => {
   const [activeTab, setActiveTab] = useState("home");
   const [subPage, setSubPage] = useState<SubPage>(null);
-  const [selectedCounselor, setSelectedCounselor] = useState<typeof counselors[0] | null>(null);
+  const [selectedCounselor, setSelectedCounselor] = useState<Counselor | null>(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -114,7 +85,9 @@ const Index = () => {
     setSelectedCounselor(null);
   };
 
-  const handleCounselorSelect = (counselor: typeof counselors[0]) => {
+  const handleConsult = () => handleTabChange("consult");
+
+  const handleCounselorSelect = (counselor: Counselor) => {
     setSelectedCounselor(counselor);
     setSubPage("counselor");
   };
@@ -125,17 +98,17 @@ const Index = () => {
       case "saju":
         return <SajuResult onBack={handleBack} />;
       case "child":
-        return <ChildAnalysis onBack={handleBack} />;
+        return <ChildAnalysis onBack={handleBack} onConsult={handleConsult} />;
       case "compatibility":
-        return <Compatibility onBack={handleBack} />;
+        return <Compatibility onBack={handleBack} onConsult={handleConsult} />;
       case "daeun":
-        return <DaeunAnalysis onBack={handleBack} />;
+        return <DaeunAnalysis onBack={handleBack} onConsult={handleConsult} />;
       case "yearly":
         return <YearlyFortune onBack={handleBack} />;
       case "tojeong":
         return <Tojeong onBack={handleBack} />;
       case "harak":
-        return <Harak onBack={handleBack} />;
+        return <Harak onBack={handleBack} onConsult={handleConsult} />;
       case "seokjung":
         return <Seokjung onBack={handleBack} />;
       case "datesel":

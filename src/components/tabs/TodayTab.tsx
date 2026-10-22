@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ChevronRight, Sun, Moon, Sparkles } from "lucide-react";
 import TodayCard from "@/components/today/TodayCard";
 import FortuneScore from "@/components/today/FortuneScore";
+import { dailyScores } from "@/lib/sample-data";
 
 interface TodayTabProps {
   onNavigate: (destination: string) => void;
@@ -67,10 +68,10 @@ const TodayTab = ({ onNavigate }: TodayTabProps) => {
       <TodayCard delay={0.3}>
         <h2 className="text-sm text-muted-foreground mb-4">오늘의 점수</h2>
         <div className="space-y-3">
-          <FortuneScore label="총운" score={78} delay={0.4} />
-          <FortuneScore label="재물" score={65} delay={0.5} />
-          <FortuneScore label="건강" score={82} delay={0.6} />
-          <FortuneScore label="애정" score={71} delay={0.7} />
+          <FortuneScore label="총운" score={dailyScores.total} delay={0.4} />
+          <FortuneScore label="재물" score={dailyScores.wealth} delay={0.5} />
+          <FortuneScore label="건강" score={dailyScores.health} delay={0.6} />
+          <FortuneScore label="애정" score={dailyScores.love} delay={0.7} />
         </div>
       </TodayCard>
 

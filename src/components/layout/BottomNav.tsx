@@ -16,7 +16,7 @@ const tabs = [
 
 const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-lg border-t border-border">
+    <nav aria-label="하단 메뉴" className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-lg border-t border-border">
       <div className="flex justify-around items-center h-16 max-w-lg mx-auto px-2">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
@@ -26,6 +26,7 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
+              aria-current={isActive ? "page" : undefined}
               className="relative flex flex-col items-center justify-center w-16 h-full"
             >
               {isActive && (
@@ -52,7 +53,7 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
         })}
       </div>
       {/* Safe area for mobile */}
-      <div className="h-safe-area-inset-bottom bg-card" />
+      <div className="bg-card pb-[env(safe-area-inset-bottom)]" />
     </nav>
   );
 };

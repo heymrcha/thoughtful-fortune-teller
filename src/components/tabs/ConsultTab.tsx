@@ -1,51 +1,12 @@
 import { motion } from "framer-motion";
 import { MessageCircle, Phone, Video, Star } from "lucide-react";
 import { toast } from "sonner";
-
-interface Counselor {
-  id: number;
-  name: string;
-  specialty: string;
-  rating: number;
-  reviews: number;
-  available: boolean;
-  image: string;
-}
+import { counselors, type Counselor } from "@/lib/sample-data";
 
 interface ConsultTabProps {
   onNavigate: (destination: string) => void;
   onCounselorSelect: (counselor: Counselor) => void;
 }
-
-const counselors: Counselor[] = [
-  {
-    id: 1,
-    name: "혜안 선생",
-    specialty: "사주명리 · 궁합",
-    rating: 4.9,
-    reviews: 1234,
-    available: true,
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
-  },
-  {
-    id: 2,
-    name: "명월 선생",
-    specialty: "타로 · 신년운세",
-    rating: 4.8,
-    reviews: 892,
-    available: true,
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-  },
-  {
-    id: 3,
-    name: "청운 선생",
-    specialty: "자녀분석 · 대운",
-    rating: 4.9,
-    reviews: 567,
-    available: false,
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
-  },
-];
 
 const ConsultTab = ({ onNavigate, onCounselorSelect }: ConsultTabProps) => {
   const handleConsultTypeClick = (type: string) => {

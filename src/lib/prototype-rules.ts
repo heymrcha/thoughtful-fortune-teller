@@ -31,3 +31,18 @@ export const getRecommendations = (count = 8) => {
   const safeCount = Number.isFinite(count) ? Math.min(8, Math.max(4, Math.floor(count))) : 8;
   return recommendationItems.slice(0, safeCount);
 };
+
+type BirthFields = Partial<Record<"year" | "month" | "day" | "hour", string>>;
+
+// 시간은 "모름"도 유효한 선택이므로 값이 비어 있는지만 확인한다
+export const isBirthComplete = (data: BirthFields) =>
+  Boolean(data.year && data.month && data.day && data.hour);
+
+export const shuffle = <T,>(items: readonly T[], random: () => number = Math.random): T[] => {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+};

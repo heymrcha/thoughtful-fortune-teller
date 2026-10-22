@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SampleNotice from "@/components/common/SampleNotice";
 import { motion } from "framer-motion";
 import { Heart, Star } from "lucide-react";
 import SubPageHeader from "@/components/common/SubPageHeader";
@@ -35,6 +36,8 @@ const NameCompatibility = ({ onBack }: NameCompatibilityProps) => {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
       <SubPageHeader title="이름 궁합 결과" onBack={() => setStep("input")} />
+
+      <SampleNotice>샘플 결과입니다. 입력한 이름과 관계없이 같은 점수가 표시됩니다.</SampleNotice>
       
       <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="bg-card rounded-2xl p-6 shadow-card text-center">
         <div className="flex items-center justify-center gap-4 mb-4">

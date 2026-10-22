@@ -38,15 +38,28 @@ export const FormField = ({ label, children }: FormFieldProps) => {
   );
 };
 
-interface BirthInputProps {
-  label?: string;
-  onComplete?: (data: { year: string; month: string; day: string; hour: string; calendarType: string; gender: string }) => void;
+export interface BirthData {
+  name: string;
+  year: string;
+  month: string;
+  day: string;
+  hour: string;
+  calendarType: string;
+  gender: string;
 }
 
-export const BirthInput = ({ label, onComplete }: BirthInputProps) => {
+interface BirthInputProps {
+  label?: string;
+  // 한 화면에 입력 폼이 여러 개일 때 스크린리더가 구분할 수 있도록 접근성 이름에 붙인다
+  ariaPrefix?: string;
+  onComplete?: (data: BirthData) => void;
+}
+
+export const BirthInput = ({ label, ariaPrefix, onComplete }: BirthInputProps) => {
   const id = useId();
-  const [data, setData] = useState({ name: "", year: "", month: "", day: "", hour: "", calendarType: "solar", gender: "male" });
-  const update = (field: keyof typeof data, value: string) => {
+  const prefix = ariaPrefix || label || "내 정보";
+  const [data, setData] = useState<BirthData>({ name: "", year: "", month: "", day: "", hour: "", calendarType: "solar", gender: "male" });
+  const update = (field: keyof BirthData, value: string) => {
     const next = { ...data, [field]: value };
     if (Number(next.day) > getBirthDayCount(next.year, next.month, next.calendarType)) next.day = "";
     setData(next);
@@ -58,13 +71,13 @@ export const BirthInput = ({ label, onComplete }: BirthInputProps) => {
       {label && <h4 className="text-sm font-medium text-foreground">{label}</h4>}
       
       <FormField label="이름">
-        <Input aria-label={`${label ?? "내 정보"} 이름`} value={data.name} onChange={(e) => update("name", e.target.value)} placeholder="이름을 입력하세요" className="bg-muted border-0" />
+        <Input aria-label={`${prefix} 이름`} value={data.name} onChange={(e) => update("name", e.target.value)} placeholder="이름을 입력하세요" className="bg-muted border-0" />
       </FormField>
       
       <div className="grid grid-cols-3 gap-2">
         <FormField label="년">
           <Select value={data.year} onValueChange={(value) => update("year", value)}>
-            <SelectTrigger aria-label={`${label ?? "내 정보"} 년도`} className="bg-muted border-0">
+            <SelectTrigger aria-label={`${prefix} 년도`} className="bg-muted border-0">
               <SelectValue placeholder="년도" />
             </SelectTrigger>
             <SelectContent>
@@ -78,7 +91,7 @@ export const BirthInput = ({ label, onComplete }: BirthInputProps) => {
         </FormField>
         <FormField label="월">
           <Select value={data.month} onValueChange={(value) => update("month", value)}>
-            <SelectTrigger aria-label={`${label ?? "내 정보"} 월`} className="bg-muted border-0">
+            <SelectTrigger aria-label={`${prefix} 월`} className="bg-muted border-0">
               <SelectValue placeholder="월" />
             </SelectTrigger>
             <SelectContent>
@@ -92,7 +105,7 @@ export const BirthInput = ({ label, onComplete }: BirthInputProps) => {
         </FormField>
         <FormField label="일">
           <Select value={data.day} onValueChange={(value) => update("day", value)}>
-            <SelectTrigger aria-label={`${label ?? "내 정보"} 일`} className="bg-muted border-0">
+            <SelectTrigger aria-label={`${prefix} 일`} className="bg-muted border-0">
               <SelectValue placeholder="일" />
             </SelectTrigger>
             <SelectContent>
@@ -108,7 +121,7 @@ export const BirthInput = ({ label, onComplete }: BirthInputProps) => {
 
       <FormField label="태어난 시간">
         <Select value={data.hour} onValueChange={(value) => update("hour", value)}>
-          <SelectTrigger aria-label={`${label ?? "내 정보"} 태어난 시간`} className="bg-muted border-0">
+          <SelectTrigger aria-label={`${prefix} 태어난 시간`} className="bg-muted border-0">
             <SelectValue placeholder="시간 선택" />
           </SelectTrigger>
           <SelectContent>

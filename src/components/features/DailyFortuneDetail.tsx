@@ -1,17 +1,19 @@
 import EmotionalRecommendations from "@/components/today/EmotionalRecommendations";
+import SampleNotice from "@/components/common/SampleNotice";
 import { motion } from "framer-motion";
 import { Sun, Zap, AlertTriangle, TrendingUp, Heart, DollarSign, Activity } from "lucide-react";
 import SubPageHeader from "@/components/common/SubPageHeader";
+import { dailyScores } from "@/lib/sample-data";
 
 interface DailyFortuneDetailProps {
   onBack: () => void;
 }
 
 const areaScores = [
-  { name: "총운", score: 78, icon: TrendingUp, color: "#C4A35A" },
-  { name: "애정운", score: 71, icon: Heart, color: "#C75146" },
-  { name: "재물운", score: 65, icon: DollarSign, color: "#4A7C59" },
-  { name: "건강운", score: 82, icon: Activity, color: "#3D5A80" },
+  { name: "총운", score: dailyScores.total, icon: TrendingUp, color: "#C4A35A" },
+  { name: "애정운", score: dailyScores.love, icon: Heart, color: "#C75146" },
+  { name: "재물운", score: dailyScores.wealth, icon: DollarSign, color: "#4A7C59" },
+  { name: "건강운", score: dailyScores.health, icon: Activity, color: "#3D5A80" },
 ];
 
 const DailyFortuneDetail = ({ onBack }: DailyFortuneDetailProps) => {
@@ -30,6 +32,8 @@ const DailyFortuneDetail = ({ onBack }: DailyFortuneDetailProps) => {
         subtitle={formattedDate} 
         onBack={onBack} 
       />
+
+      <SampleNotice>오늘의 운세 샘플입니다. 실제 해석 엔진과 연결되어 있지 않습니다.</SampleNotice>
 
       {/* One Line Advice */}
       <motion.div

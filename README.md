@@ -1,73 +1,147 @@
-# Welcome to your Lovable project
+# 더포춘 (The Fortune) — 프리미엄 사주명리 모바일 앱 프로토타입
 
-## Project info
+> 한 명의 명리 전문가의 해석 체계를 바탕으로, **일관되고 신뢰할 수 있는 해석**을 제공하는 것을 목표로 기획한 사주/명리 모바일 앱의 **클라이언트 전용 프로토타입**입니다.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+- 배포된 프로토타입(A안): <https://thoughtful-fortune-teller.lovable.app>
+- 대안 프로토타입(B안, Magic Patterns): <https://project-bright-hurricane-971.magicpatterns.app>
+- 기획·작업 기록(Notion): [사주 앱 알바](https://app.notion.com/p/heymrcha/2e2ea773793c80bfbd3bd41eb2d2972c)
+- 코드리뷰 결과: [docs/CODE_REVIEW.md](docs/CODE_REVIEW.md)
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 1. 이 저장소의 현재 상태 (먼저 읽어주세요)
 
-**Use Lovable**
+이 저장소는 **기획 검증용 프로토타입**입니다. 아래 한계를 숨기지 않고 명시합니다.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+| 구분 | 상태 |
+| --- | --- |
+| 해석 엔진 | **없음.** 사주명조·오행·점수·궁합·운세 문구는 모두 하드코딩된 샘플입니다. 입력값과 무관하게 같은 결과가 나옵니다. |
+| 백엔드 / DB / 인증 | **없음.** 로그인, 저장, 결제, 상담 예약, 푸시 알림은 구현되지 않았고 해당 버튼은 비활성화되거나 안내 토스트만 띄웁니다. |
+| AI 관상 | 사진을 **서버로 전송하지 않으며** 실제 분석도 하지 않습니다. 업로드 → 로딩 연출 → 샘플 결과 화면까지의 UX 검증용입니다. |
+| 샘플 표시 | 결과 화면마다 `SampleNotice`(샘플 안내)를 표시해 사용자가 실제 해석으로 오해하지 않도록 했습니다. |
 
-Changes made via Lovable will be committed automatically to this repo.
+백엔드 작업이 명시적으로 승인되기 전까지는 클라이언트 전용을 유지하는 것이 프로젝트 규칙입니다([AGENTS.md](AGENTS.md)).
 
-**Use your preferred IDE**
+## 2. 제품 컨셉 (Notion 기획 기준)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **신뢰 기반의 프리미엄 해석.** 오락성 운세가 아니라 *해석의 신뢰성, 서로 다른 해석 간의 논리적 일관성, 구조화된 설명이 주는 정서적 안정*이 핵심 가치입니다.
+- **설계 원칙**
+  1. 해석 권위와 일관성 — 모든 해석은 단일한 해석 로직에서 나오며 기능 간 모순이 없어야 함
+  2. 선정성보다 신뢰 — 단정·공포 조장 표현을 피하고 "경향·흐름·조언"으로 서술
+  3. 입력 민감성 — 생년월일시는 오류가 잦으므로 오류 방지와 정확도 안내를 우선
+  4. 인지 부하 관리 — 요약 → 상세 순으로 정보를 층층이 노출
+  5. 재방문 가치 — 저장·재열람·되새김이 가능한 설계
+- **핵심 4기능 (기획)**: 사주 해석 / 오늘의 운세 / 궁합 / 개인 결과 아카이브
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 정보 구조(IA)
 
-Follow these steps:
+| 탭 | 성격 | 제품 내 역할 | 구현 여부 |
+| --- | --- | --- | --- |
+| 홈 | Core Hub | 전체 서비스 진입점 (Core 3: 사주명리·오늘의 운세·자녀분석) | 구현 |
+| 오늘하루 | DAU 루틴 | 매일 방문 이유, 1분 요약 | 구현 |
+| 타로 & 네이밍 | Light / Fun | 체류·확장 콘텐츠 | 구현 |
+| 상담 | Revenue Core | 고가 전환 (선생님 선택 → 결제 → 시작) | 선생님 목록·프로필까지(결제 없음) |
+| 쇼핑몰 | Secondary Revenue | 보조 수익 | **미구현** (상품 구조 정의 필요) |
+| MY | Utility | 생년월일시·관계 프로필·구독·알림·설정 | 화면만 구현(저장 없음) |
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 3. 구현된 화면
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- **홈**: 사주명리, 오늘의 운세, 자녀분석(Core 3) / AI 관상 / 궁합·대운분석 / 신년운세·토정비결 / 석중결 / 연예인 궁합
+- **사주명리 결과**: 사주명조 → 오행 오각형 차트(터치 시 상세 팝업) → 오행 막대 차트 → 일간 상징 → 성향·인간관계·직업 적성·보완점(요약 → 펼침) → 행운의 색/방향
+- **오늘하루 / 오늘의 운세 상세**: 마음가짐·총운·점수 카드, 한 문장·행동지침·해설·주의사항, 감성 추천(4~8개 카드)
+- **타로 & 네이밍**: 오늘/연애/건강/학업/주역 타로, 이름 궁합, 반려동물 작명
+- **상담**: 상담 유형(채팅·전화·영상), 선생님 목록·프로필(결제 없음, 안내 토스트)
+- **MY**: 생년월일시 관리, 관계 프로필, 구독·결제, 알림 설정, 설정
+- **AI 관상**: 갤러리/카메라 사진 선택 → 분석 연출 → 동물상 결과(샘플)
+- **디자인 시스템 문서**: `/design-system` 경로
 
-# Step 3: Install the necessary dependencies.
-npm i
+> 하락이수(`Harak`)·택일(`DateSelection`)은 2026-01-12 요청으로 **홈 메뉴에서 제거**되었으며, 코드와 라우트만 남아 있습니다(도달 불가). 처리 방향은 [코드리뷰 문서](docs/CODE_REVIEW.md)의 "결정이 필요한 항목"을 참고하세요.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+## 4. 작업 히스토리
+
+이 프로젝트는 Notion에 정리한 기획 문서를 Lovable에 입력해 프로토타입을 만들고, 이후 수정 요청을 반복하는 방식으로 진행됐습니다. 아래는 Git 커밋(총 25개, 대부분 Lovable 봇 커밋)과 Notion 기록을 종합한 타임라인입니다.
+
+| 일자 | 단계 | 내용 | 대표 커밋 |
+| --- | --- | --- | --- |
+| 2025-01-01 | 템플릿 | Lovable `vite_react_shadcn_ts` 템플릿으로 시작 | `bebc3a2` |
+| 2026-01-10 | **1차 생성** | Notion의 서비스 컨셉·IA·유저 플로우·스토리보드를 영문 프롬프트로 변환해 Lovable에 입력. 5개 탭(홈/오늘하루/타로/상담/MY) 셸, 디자인 토큰(인디고·브라스·세이지), 사주 결과 화면, 공통 컴포넌트 구축 | `f1287d9` |
+| 2026-01-10 | **2차: 하위 화면** | 궁합·자녀분석·대운·신년운세·토정비결·하락이수·석중결·택일·연예인궁합·타로·이름궁합·반려동물 작명·상담사·MY 하위 등 **21개 화면 일괄 추가**, 탭↔하위 페이지 라우팅 연결 | `10f26cb`, `b1ccb5c` |
+| 2026-01-10 | 문서화 | 디자인 시스템 가이드 페이지(`/design-system`) 추가 | `5c96a1a` |
+| 2026-01-12 | **디자인 수정 5건** | ① 헤더 '명리의 지혜' → '더포춘' ② 하락이수·택일 메뉴 제거 ③④ 감성 추천 카드 4~8개 동적 확장(오늘하루·운세 상세) ⑤ 오행 **오각형 차트** 추가 + 항목별 상세 팝업 | `e16fc61`, `1810230` |
+| 2026-01-12 | **AI 관상 추가** | 카메라/사진 업로드 → 엔진 로딩 → 결과 화면. 초기 버전 이후 **40가지 동물상** 기준으로 개편, 사이트 메타 정보를 '더포춘'으로 갱신 | `a0c6313`, `3823733`, `d6792f6` |
+| 2026-10-22 | **유지보수 1차** | 작업 목록(`roadmap.md`)·프로젝트 규칙(`AGENTS.md`) 수립, 공용 규칙 `prototype-rules.ts`(생년 범위·월별 일수·사진 검증·감성 추천 개수)와 회귀 테스트, 사진 미리보기 `ObjectURL` 해제·타이머 정리, 입력 폼·버튼 동작 수정, 샘플임을 밝히는 문구 정리 | `3ad180f`~`a724b77` |
+| 2026-10-22 | **전체 코드리뷰 & 수정** | 전 소스 리뷰 후 버그·일관성 이슈 수정, 테스트 러너 정비, README·리뷰 문서 작성 | 이 브랜치 |
+
+### 주요 설계 의사결정 기록
+
+- **요약 → 펼침 구조**: 사주명리는 구조는 좋으나 "깊이 노출 방식"이 문제 → 그래프·이미지를 1차, 텍스트를 2차로 노출
+- **점수는 보조, 해석이 주인공**: 점수 중심이면 타로·연예인 궁합과 차별이 흐려지므로 궁합/운세 모두 점수를 하단·보조로 배치
+- **오늘의 운세**: "오늘 한 문장 + 행동지침"을 최상단에 고정, 점수·추천 콘텐츠는 하단
+- **타로는 사주명리와 같은 레벨에 두지 않음**: 엔터테인먼트·체류용 콘텐츠로 분리
+- **클라이언트 전용 유지**: 해석 엔진이 연결된 것처럼 보이지 않도록 샘플 문구를 명시
+
+### 기획 대비 미구현 항목
+
+- 개인 결과 아카이브(저장·재열람) — 핵심 4기능 중 하나이나 저장소 없음
+- 앱 최초 실행 진입 화면 / 생년월일시 입력 확인(요약·수정) 온보딩 단계
+- 쇼핑몰 탭
+- 사주명리 → 상담 전환 CTA (자녀분석·궁합·대운은 연결 완료)
+- 상담 결제·시작 플로우
+
+## 5. 기술 스택
+
+| 영역 | 사용 기술 |
+| --- | --- |
+| 빌드·언어 | Vite 5, TypeScript 5, React 18 (SWC) |
+| UI | Tailwind CSS 3, shadcn/ui(Radix UI), framer-motion, lucide-react, sonner |
+| 라우팅·상태 | react-router-dom 6 (실제 화면 전환은 `pages/Index.tsx`의 탭·서브페이지 상태로 처리) |
+| 테스트 | Vitest |
+| 기타 | TanStack Query·react-hook-form·zod 등은 설치만 되어 있고 현재 화면에서는 거의 사용하지 않음 |
+
+### 폴더 구조
+
+```text
+src/
+├─ pages/            Index(탭·서브페이지 셸), DesignSystem, NotFound
+├─ components/
+│  ├─ tabs/          홈·오늘하루·타로·상담·MY 탭, 사주 결과
+│  ├─ features/      서브페이지 20개 (궁합, 자녀분석, AI 관상 …)
+│  ├─ saju/          사주명조·오행 차트·오각형·해석 섹션
+│  ├─ today/ home/ layout/ common/   재사용 컴포넌트 (SampleNotice, InputForm 등)
+│  └─ ui/            shadcn/ui 프리미티브
+└─ lib/
+   ├─ prototype-rules.ts        공용 입력·개수 검증 규칙 (+ .test.ts)
+   └─ sample-data.ts            화면 간 공유하는 샘플 데이터
 ```
 
-**Edit a file directly in GitHub**
+## 6. 시작하기
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+npm install
+npm run dev      # http://localhost:8080
+npm test         # Vitest 회귀 테스트
+npm run lint
+npm run build
+```
 
-**Use GitHub Codespaces**
+> `bun.lockb`가 함께 있지만 현재 기준 락파일은 `package-lock.json`입니다. 의존성 변경 시 npm을 사용하세요.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 7. 개발 규칙 요약
 
-## What technologies are used for this project?
+자세한 내용은 [AGENTS.md](AGENTS.md)를 참고하세요.
 
-This project is built with:
+- 입력·개수 검증은 `src/lib/prototype-rules.ts`에 두고 테스트로 고정
+- 오늘하루 탭과 오늘의 운세 상세는 같은 데이터 소스를 사용(값 불일치 방지)
+- 탭·서브페이지별로 `key`를 분리해 한 기능의 상태가 다른 기능으로 새지 않게 함
+- 사진 미리보기는 해제 가능한 `ObjectURL`과 effect가 소유한 타이머만 사용
+- 색상은 전역 CSS 시맨틱 토큰만 사용하고, 유지보수 중 디자인을 새로 바꾸지 않음
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 8. 로드맵
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- [x] 기존 대화와 구현 상태를 README에 정리
+- [x] 전체 코드 검토 및 우선순위별 문제 기록 ([docs/CODE_REVIEW.md](docs/CODE_REVIEW.md))
+- [x] 프로토타입 범위 내 확인된 오류 수정
+- [x] 주요 사용 흐름과 회귀 검사 실행 및 결과 문서화
+- [ ] 하락이수·택일 처리 결정(삭제 또는 복구)
+- [ ] 개인 결과 아카이브·온보딩 등 기획 대비 미구현 항목 범위 확정
+- [ ] 해석 엔진·백엔드 도입 여부 결정 (승인 전까지 클라이언트 전용 유지)

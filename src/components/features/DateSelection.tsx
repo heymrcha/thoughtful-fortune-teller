@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SampleNotice from "@/components/common/SampleNotice";
 import { motion } from "framer-motion";
 import { Calendar, Check, X } from "lucide-react";
 import SubPageHeader from "@/components/common/SubPageHeader";
@@ -135,6 +136,8 @@ const DateSelection = ({ onBack }: DateSelectionProps) => {
         subtitle={`${purposes.find(p => p.id === purpose)?.name || ""} 추천 날짜`}
         onBack={() => setStep("input")} 
       />
+
+      <SampleNotice />
 
       {/* Recommended Dates */}
       <motion.div
